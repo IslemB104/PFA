@@ -1,0 +1,28 @@
+
+.container {
+    width: 450px;
+    height: 150px;
+    margin: auto;
+    text-align: center;
+    color: #fff;
+}
+
+.title {
+    text-align: center;
+    color: #fff;
+    font-size: 30px;
+    letter-spacing: -0.04em;
+    margin-bottom: 14px;
+}
+
+.imageContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+.layout {
+   background-color: #475be8;
+    border-radius: 15px;
+    border-color: #302f2f;
+}
