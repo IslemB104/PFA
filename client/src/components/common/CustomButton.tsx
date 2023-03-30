@@ -5,7 +5,8 @@ const CustomButton = ({type, title, backgroundColor,
   return (
     <Button 
         sx={{
-          float:'right',
+          
+          float:'right'? 1 :'center',
           flex: fullWidth ? 1 : 'unset',
           padding: '10px 15px',
           width: fullWidth ? '100%' : 'fit-content',

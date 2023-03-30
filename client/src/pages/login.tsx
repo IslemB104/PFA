@@ -1,14 +1,11 @@
 import { useLogin } from "@pankod/refine-core";
-import { Box, Container } from "@pankod/refine-mui";
+import { Box, color, Container, RadioGroup } from "@pankod/refine-mui";
 import {TunMedCare} from '../assets/assets';
-
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Form, Input } from 'antd';
 import { useState, useEffect, useRef } from "react";
 
 import { CredentialResponse } from "interfaces/interfaces/google";
-
-import DoctorHome from "./DoctorHome";
-import PatientHome from "./PatientHome";
-import { useNavigate } from 'react-router-dom';
 
 import "../pages/style.css";
 import {
@@ -17,12 +14,12 @@ import {
   AntdLayout,
   Card,
   Typography,
-  Form,
-  Input,
-  Button,
-  Checkbox,
-  Radio,
 } from "@pankod/refine";
+
+
+import {useNavigate} from '@pankod/refine-react-router-v6'
+
+import Signup from "./signup";
 
 const { Text, Title } = Typography;
 
@@ -31,6 +28,8 @@ export interface ILoginForm {
     password: string;
     remember: boolean;
 }
+
+
 
 export const Login: React.FC = () => {
   const { mutate: login } = useLogin<CredentialResponse>();
@@ -41,74 +40,60 @@ export const Login: React.FC = () => {
 );
 ///////
 
-    const [Fname ,setFname]=useState("")
-    const [Lname ,setLname]=useState("")
-    const [email ,setEmail]=useState("")
+const [open, setOpen] = useState(false);
+
+  const onCreate = (values: any) => {
+    console.log('Received values of form: ', values);
+    setOpen(false);
+  };
+  
+
+
+    interface FormData {
+      user: string;
+    }
+
+    const initialValues: FormData = {
+      user: "",
+    };
+
+
+    const [formData, setFormData] = useState<FormData>(initialValues);
+    
+    const [UserName ,setUserName]=useState("")
     const [pwd ,setPwd]=useState("")
-    const [isDoctor ,setIsDoctor]=useState({isDoctor: false})
 
-    const handleClickDoctor=()=>{
-      let infosId= JSON.parse(localStorage.getItem("infosId") || "1");
-        let data=
-          {
-            Fname : Fname,
-            Lname : Lname,
-            email : email,
-            pwd : pwd,
-            isDoctor: true,
-            id:infosId,
-          };
-          
-
-        let infos= JSON.parse(localStorage.getItem("infos") || "[]");
-        infos.push(data);
-        console.log(infos);
-        localStorage.setItem("infos",JSON.stringify(infos));
-        localStorage.setItem("infosId",JSON.stringify(infosId +1));
-        setIsDoctor({isDoctor :true})
-        
-      }
-      const handleClickPatient=()=>{
+    
+      const handleClickDoctor=()=>{
+      
         let infosId= JSON.parse(localStorage.getItem("infosId") || "1");
           let data=
             {
-              Fname : Fname,
-              Lname : Lname,
-              email : email,
+              UserName : UserName,
               pwd : pwd,
-              isDoctor: false,
               id:infosId,
             };
+            
   
           let infos= JSON.parse(localStorage.getItem("infos") || "[]");
           infos.push(data);
           console.log(infos);
           localStorage.setItem("infos",JSON.stringify(infos));
           localStorage.setItem("infosId",JSON.stringify(infosId +1));
-          setIsDoctor({isDoctor :false})
+          
+         // setIsDoctor({isDoctor :true})
           
         }
+     
       
-        const changeFname = (event: React.ChangeEvent<HTMLInputElement>) => {
-          setFname(event.target.value);
-        };
-        
-        const changeLname = (event: React.ChangeEvent<HTMLInputElement>) => {
-          setLname(event.target.value);
-        };
-        
-        const changeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
-          setEmail(event.target.value);
+        const changeUserName = (event: React.ChangeEvent<HTMLInputElement>) => {
+          setUserName(event.target.value);
         };
         
         const changePwd = (event: React.ChangeEvent<HTMLInputElement>) => {
           setPwd(event.target.value);
         };
        
-        
-        
-        
-        
         
         
       ///////////////////
@@ -172,8 +157,8 @@ export const Login: React.FC = () => {
             alignItems: "center",
           }}
         >
-          <Box  mt={70}>
-          <div>
+          <Box  mt={72}>
+          <div style={{float:"left"}}>
             <img src={TunMedCare} alt="TunMedCare Logo" width="700px"/>
           </div>
           </Box>
@@ -183,7 +168,8 @@ export const Login: React.FC = () => {
                 justify="center"
                 align="middle"
                 style={{
-                    height: "450px",
+                height: "460px",
+                width:"500px"
                 }}
             >
                 <Col xs={22}>
@@ -199,100 +185,89 @@ export const Login: React.FC = () => {
                                 requiredMark={false}
                                 initialValues={{
                                     remember: false,
-                                    email: "",
+                                    username: "",
                                     password: "",
-                                    isDoctor: false,
+                                    
                                 }}
                             >
                               <div style={{ marginBottom: "12px" }}>
-                                    <Form.Item
-                                        
-                                        name="type"
-                                        valuePropName="checked"
-                                        noStyle
-                                    >
-                                        <Radio name="type">
-                                        Patient
-                                        </Radio>
-                                        <Radio name="type">
-                                        Doctor
-                                        </Radio>
-                                    </Form.Item>
-                                </div>
                               <Form.Item
-                                    name="name"
-                                    label="Name"
-                                    rules={[{ required: true }]}
-                                    style={{ marginBottom: "12px" }}
-                                    
-                                >
-                                    <Input  onChange={changeFname} value={Fname} size="large" placeholder="Name" />
+                                name="username"
+                                rules={[{ required: true, message: 'Please input your Username!' }]}
+                              >
+                                <Input onChange={changeUserName} prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+                              </Form.Item>
+                              <Form.Item
+                                name="password"
+                                rules={[{ required: true, message: 'Please input your Password!' }]}
+                              >
+                                <Input onChange={changePwd}
+                                  prefix={<LockOutlined className="site-form-item-icon" />}
+                                  type="password"
+                                  placeholder="Password"
+                                  
+                                />
+                              </Form.Item>
+                              <Form.Item>
+                                <Form.Item name="remember" valuePropName="checked" noStyle>
+                                  <Checkbox style={{color:"#fcfcfc"}}>Remember me</Checkbox>
                                 </Form.Item>
-                                <Form.Item
-                                    name="last name"
-                                    label="Last name"
-                                    rules={[{ required: true }]}
-                                    style={{ marginBottom: "12px" }}
-                                >
-                                    <Input  onChange={changeLname} value={Lname} size="large" placeholder="Last name" />
-                                </Form.Item>
-                                <Form.Item
-                                    name="email"
-                                    label="Email"
-                                    rules={[{ required: true, type: "email" }]}
-                                    style={{ marginBottom: "12px" }}
-                                >
-                                    <Input  onChange={changeEmail} value={email} size="large" placeholder="Email" />
-                                </Form.Item>
-                                <Form.Item
-                                    name="password"
-                                    label="Password"
-                                    rules={[{ required: true }]}
-                                    style={{ marginBottom: "12px" }}
-                                >
-                                    <Input
-                                        type="password"
-                                        placeholder="●●●●●●●●"
-                                        size="large"
-                                        value={pwd}
-                                        onChange={changePwd}
-                                    />
-                                </Form.Item>
-                                <div style={{ marginBottom: "12px" }}>
-                                    <Form.Item
-                                        name="remember"
-                                        valuePropName="checked"
-                                        noStyle
-                                    >
-                                        <Checkbox
-                                            style={{
-                                                fontSize: "12px",
-                                            }}
-                                        >
-                                            Remember me
-                                        </Checkbox>
-                                    </Form.Item>
+
+                              </Form.Item>
+
+                              
                                 </div>
                                 <Button
                                 
                                 onClick={(handleClickDoctor)}
-                               
+                                    style={{padding: '6px 15px',
+                                    marginBottom:"10px",
+                                    backgroundColor:"#fcfcfc",
+                                    borderRadius:4,
+                                    color:"#475be8",
+                                    fontSize: 14,
+                                  }}
                                     type="primary"
                                     size="large"
                                     htmlType="submit"
                                     block>
-                                    Doctor Sign in 
+                                    Log in 
+                                    
                                 </Button>
-                                <Button
-                                onClick={handleClickPatient}
                                 
+                            </Form>
+                            <div>
+                            <hr  color="#fcfcfc" ></hr>
+                            <Form.Item >
+                                <h3 style={{color:"#fcfcfc"}}>Or  register now!</h3>
+                              
+                              </Form.Item>
+                            <Button
+                                
+                                onClick={() => {
+                                  setOpen(true);
+                                   }}
+                                    style={{padding: '6px 15px',
+                                    backgroundColor:"#fcfcfc",
+                                    borderRadius:4,
+                                    color:"#475be8",
+                                    fontSize: 14,
+                                  }}
                                     type="primary"
                                     size="large"
                                     htmlType="submit"
                                     block>
-                                    Patient Sign in 
+                                    Sign up 
+                                    
                                 </Button>
-                            </Form>
+                                <Signup
+                                  open={open}
+                                  onCreate={onCreate}
+                                  onCancel={() => {
+                                    setOpen(false);
+                                  }}
+                                />
+                            </div>
                             
                         </Card>
                         

@@ -14,10 +14,13 @@ import {
 import { 
   AccountCircleOutlined,
   ChatBubbleOutline,
+  Dashboard,
+  PeopleAltOutlined,
   
  } from "@mui/icons-material";
  import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
  import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
+ import HomeIcon from '@mui/icons-material/Home';
  import { parseJwt } from "utils/parse-jwt";
 import routerProvider from "@pankod/refine-react-router-v6";
 import dataProvider from "@pankod/refine-simple-rest";
@@ -34,13 +37,23 @@ import {
   Calender,
   Messages,
   Profile,
+  AdminHome,
+  AllDoctors,
+  AllPatients,
+  AddPatient,
+  AddDoctor,
+  NotifPatient,
+  MessagesPatient,
+  Signup,
+
  } from "pages";
  
 
 
  import { useState, useEffect } from "react";
 import { Box } from "@mui/system";
- 
+
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 
 
@@ -60,6 +73,19 @@ axiosInstance.interceptors.request.use((request: AxiosRequestConfig) => {
 });
 
 function App() {
+////////////////////////
+
+<Router basename={process.env.PUBLIC_URL}>
+        <Route path="PatientHome" element={<PatientHome/>} />
+        <Route path="DoctorHome" element={<DoctorHome/>} />
+        <Route path="AdminHome" element={<AdminHome/>} />
+        <Route path="AllPatients" element={<AllPatients/>} />
+        <Route path="AllDoctors" element={<AllDoctors/>} />
+        
+</Router>
+
+
+///////////////////////
   const authProvider: AuthProvider = {
     login: ({ credential }: CredentialResponse) => {
       const profileObj = credential ? parseJwt(credential) : null;
@@ -114,24 +140,31 @@ function App() {
 
   
   ////////////
-    const[user,setUser]=useState();
-
+  interface data
+  {
+    Fname : string;
+    Lname : string;
+    email : string;
+    pwd : string;
+    type: string;
+  };
+  
+    const [infos, setInfos] = useState<data | null>(null);
+    
     useEffect(()=>{
         getAllInfos()
+        
+        console.log(infos?.type)
+        
     },[]);
 
     const getAllInfos=()=>{
         let infos= JSON.parse(localStorage.getItem("infos") || "[]");
-        setUser(infos);
+        setInfos(infos);
+        
     }
-    useEffect(()=>{
-       console.log(user)
-    },[]);
-  const Doctor= JSON.parse(localStorage.getItem("infos") || "[]").isDoctor;
-  
- 
-
-  
+    let Type= infos?.type;
+    
 ///////////////
   return (
     <div>
@@ -153,12 +186,20 @@ function App() {
           catchAll={<ErrorComponent />}
           
           
-          resources={[
+          resources={(Type==="doctor") ?[
+            {
+              name:"DoctorHome",
+              options: { label: "Acceuil" },
+              list:DoctorHome,
+              //create: AddPatient,
+              icon: <HomeIcon/>
+              
+              
+            },
             
             {
               name: "Notifications",
               list: Notifications,
-              options: { label: "Notifications" },
               icon: <Badge  
               style={{ backgroundColor: '#e00a24' ,color:'white', borderRadius:"8px" }}
               count={ 8 }><CircleNotificationsIcon /></Badge>,
@@ -170,15 +211,52 @@ function App() {
               icon:<CalendarMonthIcon/>
               
             },
-            /*{
-              name: "Liste Patients",
-              list: MuiInferencer,
+            {
+              name: "Patients",
+              list: AllPatients,
               options:{label: 'Liste Patients'},
               icon:<PeopleAltOutlined/>
-            },*/
+            },
             {
               name: "Messages",
               list: Messages,
+              options:{label: 'Messages'},
+              icon:<Badge  
+              style={{ backgroundColor: '#e00a24' ,color:'white', borderRadius:"8px" }}
+              count={ 4 }><ChatBubbleOutline/></Badge>
+            },
+            {
+              name: "Profil",
+              list: Profile,
+              options:{label: 'Profil'},
+              icon:<AccountCircleOutlined/>
+            },
+            
+           
+          ]:[
+            {
+              name:"PatientHome",
+              options: { label: "Acceuil" },
+              list:PatientHome,
+              icon: <HomeIcon/>
+            },
+            {
+              name: "Notifications",
+              list: NotifPatient,
+              options: { label: "Notifications" },
+              icon: <Badge  
+              style={{ backgroundColor: '#e00a24' ,color:'white', borderRadius:"8px" }}
+              count={ 8 }><CircleNotificationsIcon /></Badge>,
+            },
+            {
+              name: "Doctors",
+              list: AllDoctors,
+              options:{label: 'Docteurs'},
+              icon:<PeopleAltOutlined/>
+            },
+            {
+              name: "Messages",
+              list: MessagesPatient,
               options:{label: 'Messages'},
               icon:<Badge  
               style={{ backgroundColor: '#e00a24' ,color:'white', borderRadius:"8px" }}
@@ -198,13 +276,45 @@ function App() {
           routerProvider={routerProvider}
           authProvider={authProvider}
           LoginPage={Login}
-          DashboardPage={() => (
+          /*DashboardPage={() => (
             <Box>
-                {Doctor ? <DoctorHome /> :<PatientHome /> }
+                {(Type==="doctor") ? <AdminHome/> :(Type==="patient") ?  <PatientHome /> :  < DoctorHome /> } 
                 </Box>
-          )}
+          )}*/
+          
         />
+        {/*<Refine 
+          dataProvider={dataProvider("https://api.fake-rest.refine.dev")}
+          notificationProvider={notificationProvider}
+          ReadyPage={ReadyPage}
+          catchAll={<ErrorComponent />}
+          routerProvider={routerProvider}
+              
+
+            resources={[
+                
+              {
+              name:"DoctorHome",
+              list:DoctorHome,
+              create: AddPatient,
+              show: AllPatients,
+              parentName:"Acceuil",
+              
+            },
+            
+            {
+              name:"PatientHome",
+              list:PatientHome,
+              create: AddDoctor,
+              show: AllDoctors,
+            },
+            ]}
+      
+      
+      
+      />*/}
       </RefineSnackbarProvider>
+      
     </ColorModeContextProvider>
     </div>
   );

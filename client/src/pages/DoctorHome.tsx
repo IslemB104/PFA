@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {useList} from '@pankod/refine-core';
 import {Add, PeopleAltOutlined} from "@mui/icons-material";
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
@@ -8,50 +8,84 @@ import {
   CustomButton,
   
 } from 'components';
-import{Box, Stack, Typography} from '@pankod/refine-mui'
+import{Box, Stack, style, Typography} from '@pankod/refine-mui'
 import {useNavigate} from '@pankod/refine-react-router-v6'
+import AddPatient from './AddPatient';
+import { Button } from 'antd';
+
+
 
 function DoctorHome() {
   const navigate=useNavigate();
+  const [open, setOpen] = useState(false);
+
+  const onCreate = (values: any) => {
+    console.log('Received values of form: ', values);
+    setOpen(false);
+  };
+
+
   return (
-    <div style={{width:"1200px"}}>
+    <div style={{width:"1270px"}}>
+      
     <Box>
       <Stack direction="row"
       justifyContent="space-between"
-      alignItems="center">
+      alignItems="center"
+      marginBottom={3}>
         <Typography fontSize={25} fontWeight={700}
         color="#11142d"
         >
-          Acceuil Docteur</Typography>
-        <CustomButton
+          Accueil Docteur</Typography>
+        {/*<CustomButton
         title="Liste Patients"
-        handleClick={()=>navigate('/AllPatients')}
+        handleClick={()=>navigate('/DoctorHome/show')}
         backgroundColor="#475be8"
         color="#fcfcfc"
         icon={<PeopleAltOutlined/>}
+  />*/}
+       {/*<CustomButton
+      
+      title="Ajouter Patient"
+      onClick={()=>{() => {
+        setOpen(true);
+         }}}
+      backgroundColor="#475be8"
+      color="#fcfcfc"
+      icon={<Add/>}
+        />*/}
+      <Button
+                                
+        onClick={() => {
+         setOpen(true);
+          }}
+        style={{
+        backgroundColor:"#475be8",
+        borderRadius:4,
+        color:"#fcfcfc",
+        fontSize: 18,
+        width:'fit-content',
+        height:"50px",
+        }}
+        type="primary"
+        size="large"
+        htmlType="submit"
+        block>
+       <Add style={{marginRight:"10px", fontSize:"23px"}}/> Ajouter Patient
+                                    
+      </Button>
+      <AddPatient
+        open={open}
+        onCreate={onCreate}
+        onCancel={() => {
+        setOpen(false);
+        }}
         />
-        
       </Stack>
     </Box>
-    <Box>
-    <Stack direction="row"
-      justifyContent="space-between"
-      alignItems="center"
-      paddingLeft={128.3}
-      paddingTop={1}>
     
-       <CustomButton
-      
-        title="Ajouter Patient"
-        handleClick={()=>navigate('/AjoutPatient')}
-        backgroundColor="#475be8"
-        color="#fcfcfc"
-        icon={<Add/>}
-        
-        />
-    </Stack>
-  </Box>
-  <Box paddingTop={2}>
+    
+  <Box>
     <Stack direction="row">
       <UrgentNotif
       title= {"Hypertension Patient: Med Ali"}
