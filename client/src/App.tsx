@@ -51,8 +51,8 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import EditPatient from "pages/EditPatient";
 import EditDoctor from "pages/EditDoctor";
 
-const API_TOKEN = "keyI18pnBeEMfPAIb";
-const BASE_ID = "appKYl1H4k9g73sBT";
+const API_TOKEN = "";
+const BASE_ID = "";
 
 
 
