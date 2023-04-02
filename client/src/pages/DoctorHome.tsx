@@ -8,15 +8,13 @@ import {
   CustomButton,
   
 } from 'components';
-import{Box, Stack, style, Typography} from '@pankod/refine-mui'
-import {useNavigate} from '@pankod/refine-react-router-v6'
+import{Box, Stack, Typography} from '@pankod/refine-mui'
 import AddPatient from './AddPatient';
 import { Button } from 'antd';
 
 
 
 function DoctorHome() {
-  const navigate=useNavigate();
   const [open, setOpen] = useState(false);
 
   const onCreate = (values: any) => {

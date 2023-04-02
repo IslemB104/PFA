@@ -28,8 +28,8 @@ const AddPatient: React.FC<AddCreateFormProps> = ({
     <Modal
       open={open}
       title="Ajouter Docteur"
-      okText="Create"
-      cancelText="Cancel"
+      okText="Ajouter"
+      cancelText="Annuler"
       onCancel={onCancel}
       onOk={() => {
         form

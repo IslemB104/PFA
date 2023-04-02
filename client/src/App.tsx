@@ -6,15 +6,11 @@ import {
   ReadyPage,
   RefineSnackbarProvider,
   notificationProvider,
-  Icon,
-  color,
-  width,
 } from "@pankod/refine-mui";
 
 import { 
   AccountCircleOutlined,
   ChatBubbleOutline,
-  Dashboard,
   PeopleAltOutlined,
   
  } from "@mui/icons-material";
@@ -36,15 +32,13 @@ import {
   Notifications,
   Calender,
   Messages,
-  Profile,
+  DoctorProfile,
+  PatientProfile,
   AdminHome,
   AllDoctors,
   AllPatients,
-  AddPatient,
-  AddDoctor,
   NotifPatient,
   MessagesPatient,
-  Signup,
 
  } from "pages";
  
@@ -54,7 +48,11 @@ import {
 import { Box } from "@mui/system";
 
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import EditPatient from "pages/EditPatient";
+import EditDoctor from "pages/EditDoctor";
 
+const API_TOKEN = "keyI18pnBeEMfPAIb";
+const BASE_ID = "appKYl1H4k9g73sBT";
 
 
 
@@ -81,7 +79,14 @@ function App() {
         <Route path="AdminHome" element={<AdminHome/>} />
         <Route path="AllPatients" element={<AllPatients/>} />
         <Route path="AllDoctors" element={<AllDoctors/>} />
-        
+        <Route path="/Doctors">
+          <Route index element={<AllDoctors />} />
+          <Route path="/edit/:id" element={<EditDoctor />} />
+        </Route>
+        <Route path="/Patients">
+          <Route index element={<AllPatients />} />
+          <Route path="/edit/:id" element={<EditPatient />} />
+        </Route>
 </Router>
 
 
@@ -186,7 +191,7 @@ function App() {
           catchAll={<ErrorComponent />}
           
           
-          resources={(Type==="doctor") ?[
+          resources={!(Type==="doctor") ?[
             {
               name:"DoctorHome",
               options: { label: "Acceuil" },
@@ -214,6 +219,7 @@ function App() {
             {
               name: "Patients",
               list: AllPatients,
+              edit:EditPatient,
               options:{label: 'Liste Patients'},
               icon:<PeopleAltOutlined/>
             },
@@ -227,7 +233,7 @@ function App() {
             },
             {
               name: "Profil",
-              list: Profile,
+              list: DoctorProfile,
               options:{label: 'Profil'},
               icon:<AccountCircleOutlined/>
             },
@@ -251,6 +257,7 @@ function App() {
             {
               name: "Doctors",
               list: AllDoctors,
+              edit:EditDoctor,
               options:{label: 'Docteurs'},
               icon:<PeopleAltOutlined/>
             },
@@ -264,7 +271,7 @@ function App() {
             },
             {
               name: "Profil",
-              list: Profile,
+              list: PatientProfile,
               options:{label: 'Profil'},
               icon:<AccountCircleOutlined/>
             },

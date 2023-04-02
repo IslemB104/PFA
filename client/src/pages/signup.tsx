@@ -46,8 +46,8 @@ const Signup: React.FC<SignupCreateFormProps> = ({
     <Modal
       open={open}
       title="Créer un compte"
-      okText="Create"
-      cancelText="Cancel"
+      okText="Créer"
+      cancelText="Annuler"
       onCancel={onCancel}
       onOk={() => {
         form
@@ -139,8 +139,8 @@ const Signup: React.FC<SignupCreateFormProps> = ({
       >
         <Select placeholder="select">
         <Option value=""></Option>
-          <Option value="male">Male</Option>
-          <Option value="female">Female</Option>
+          <Option value="male">Homme</Option>
+          <Option value="female">Famme</Option>
         </Select>
       </Form.Item>
       <Form.Item 
@@ -171,6 +171,9 @@ const Signup: React.FC<SignupCreateFormProps> = ({
             {({ getFieldValue }) =>
               getFieldValue('user') === 'doctor' ? (
                 <div>
+                  <Form.Item name="adress" label="adresse" rules={[{ required: true }]}>
+                  <Input />
+                </Form.Item>
                 <Form.Item name="specialite" label="Spécialité" rules={[{ required: true }]}>
                   <Input />
                 </Form.Item>

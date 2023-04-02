@@ -16,6 +16,7 @@ const AllDoctors = () => {
             enabled: !!dataGridProps?.rows,
         },
     });
+    
 
     const columns = React.useMemo<GridColumns<any>>(
         () => [
